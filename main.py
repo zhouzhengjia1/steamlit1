@@ -11,114 +11,129 @@ st.set_page_config(page_title="AI Chat Interface", page_icon="💬", layout="wid
 st.markdown(
     """
 <style>
-    /* Main container styling */
-    .stApp {
-        background-color: #343541;
+    /* 新版浅色主题变量 */
+    :root {
+        --color-background: #F5F2E9;
+        --color-background-soft: #EBE6D9;
+        --color-background-mute: #E5DFD1;
+        --navbar-background: #F2EEE3;
+        --chat-background: #F9F6ED;
+        --chat-background-user: #F5F2E9;
+        --chat-background-assistant: #EBE6D9;
+        --color-text: #333333;
+        --color-text-secondary: #666666;
+        --color-accent: #4CAF50;
+        --color-border: #D5D0C1;
+        --color-hover: #E0DBCA;
     }
     
-    /* Message styling */
+    /* 主容器样式 */
+    .stApp {
+        background-color: var(--color-background) !important;
+        color: var(--color-text) !important;
+    }
+    
+    /* 聊天消息样式 */
     .chat-message {
-        padding: 1.5rem;
-        border-radius: 0.5rem;
-        margin-bottom: 1rem;
+        padding: 1.25rem;
+        border-radius: 8px;
+        margin-bottom: 12px;
         display: flex;
-        color: white;
+        color: var(--color-text);
+        line-height: 1.5;
+        font-size: 15px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
     }
     
     .user-message {
-        background-color: #343541;
-        border-bottom: 1px solid #565869;
+        background-color: var(--chat-background-user);
+        border: 1px solid var(--color-border);
     }
     
     .assistant-message {
-        background-color: #444654;
-        border-bottom: 1px solid #565869;
+        background-color: var(--chat-background-assistant);
+        border: 1px solid var(--color-border);
     }
     
-    /* Text colors */
-    h1, h2, h3, p, span, label {
-        color: white !important;
+    /* 文本颜色 */
+    h1, h2, h3, h4, h5, h6, p, span, label {
+        color: var(--color-text) !important;
     }
     
-    /* Sidebar */
+    /* 侧边栏样式 */
     section[data-testid="stSidebar"] {
-        background-color: #202123;
+        background-color: var(--navbar-background) !important;
+        border-right: 1px solid var(--color-border);
     }
     
-    /* Input styling */
-    .stTextInput > div > div > input, .stTextArea textarea {
-        background-color: #40414f;
-        color: white;
+    /* 输入框样式 */
+    .stTextInput > div > div > input, 
+    .stTextArea textarea {
+        background-color: white !important;
+        color: var(--color-text) !important;
+        border: 1px solid var(--color-border) !important;
+        border-radius: 6px !important;
     }
     
-    /* Button styling */
+    /* 按钮样式 */
     .stButton > button {
-        background-color: #19c37d;
-        color: white;
-        border: none;
+        background-color: var(--color-accent) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 6px !important;
+        transition: all 0.3s ease;
     }
     
-    /* Bottom padding for content */
-    .main .block-container {
-        padding-bottom: 3rem;
+    .stButton > button:hover {
+        background-color: #43A047 !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     
-    /* Markdown styling */
-    .stMarkdown p {
-        white-space: pre-wrap;
+    /* 滚动条样式 */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
     }
     
-    /* Cursor animation */
-    @keyframes blink {
-        0% { opacity: 0; }
-        50% { opacity: 1; }
-        100% { opacity: 0; }
+    ::-webkit-scrollbar-track {
+        background: var(--color-background-soft);
     }
     
-    .typing-cursor {
-        display: inline-block;
-        width: 7px;
-        height: 15px;
-        background-color: #19c37d;
-        margin-left: 2px;
-        animation: blink 1s infinite;
-    }
-    
-    /* Make sure streaming looks smooth */
-    .ai-response {
-        min-height: 24px;
-    }
-    
-    /* Fixed height for chat container */
-    .chat-container {
-        overflow-y: auto;
-        max-height: calc(100vh - 300px);
-    }
-    
-    /* Notification for keyboard shortcuts */
-    .keyboard-info {
-        font-size: 0.8rem;
-        color: #8e8ea0;
-        margin-top: 5px;
-        font-style: italic;
-    }
-    
-    /* Hide the default Streamlit header and footer */
-    header {
-        visibility: hidden;
-    }
-    
-    footer {
-        visibility: hidden;
-    }
-    
-    /* Style for notes */
-    .note-text {
-        background-color: rgba(255, 255, 255, 0.1);
-        padding: 8px;
+    ::-webkit-scrollbar-thumb {
+        background: #C5C0B0;
         border-radius: 4px;
-        font-size: 0.9rem;
-        margin-top: 8px;
+    }
+    
+    /* 打字光标颜色 */
+    .typing-cursor {
+        background-color: var(--color-accent);
+    }
+    
+    /* 键盘提示信息 */
+    .keyboard-info {
+        color: var(--color-text-secondary);
+    }
+    
+    /* 调试信息区域 */
+    .stExpander {
+        background-color: white !important;
+        border: 1px solid var(--color-border) !important;
+    }
+    
+    /* 悬停效果 */
+    .chat-message:hover {
+        background-color: var(--color-hover);
+    }
+    
+    /* 移动端响应式调整 */
+    @media (max-width: 768px) {
+        .chat-message {
+            padding: 1rem;
+        }
+        
+        .stTextArea textarea {
+            min-height: 100px;
+        }
     }
 </style>
 """,
@@ -194,13 +209,15 @@ with st.sidebar:
 
     base_url = st.text_input(
         "API Base URL:",
-        value="https://api.deepseek.com",
+        value="https://api.996444.cn/v1",
         help="API基础URL（例如DeepSeek: https://api.deepseek.com）",
     )
 
     # Model selection
     model = st.text_input(
-        "模型名称", value="deepseek-chat", help="输入模型名称（例如：deepseek-chat）"
+        "模型名称",
+        value="gemini-2.5-pro-preview-03-25",
+        help="输入模型名称（例如：deepseek-chat）",
     )
 
     # System message
